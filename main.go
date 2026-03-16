@@ -7,5 +7,6 @@ func main() {
 	http.HandleFunc("/getPost", getPost)
 	http.HandleFunc("/post/{id}/comment", addComment)
 	http.HandleFunc("/getPost/{id}", fetchPost)
+	http.HandleFunc("/post/{id}", AddPostById)
 	http.ListenAndServe(":8080", nil)
 }

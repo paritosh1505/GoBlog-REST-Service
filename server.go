@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -18,9 +17,7 @@ type postData struct {
 var Allpost = make(map[int][]postData)
 
 func createPost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		//statsu code -405
-		http.Error(w, "**ONLY POST METHOD ALLOWED**", http.StatusMethodNotAllowed)
+	if HandlePostError(w, r) {
 		return
 	}
 	var post postData
@@ -39,11 +36,10 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func getPost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		//status code - 405
-		http.Error(w, "**ONLY GET METHOD ALLOWED**", http.StatusMethodNotAllowed)
+	if HandleGetError(w, r) {
 		return
 	}
+
 	json.NewEncoder(w).Encode(&Allpost)
 }
 func addComment(w http.ResponseWriter, r *http.Request) {
@@ -80,16 +76,21 @@ func fetchPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "invalid get id", http.StatusBadRequest)
 	}
-	if r.Method != http.MethodGet {
-		http.Error(w, "ONLY GET METHOD ALLOWED", http.StatusMethodNotAllowed)
+	if HandleGetError(w, r) {
 		return
 	}
+
 	for i, data := range Allpost {
 		if i == idval {
-			fmt.Println("***", data)
 			w.WriteHeader(http.StatusAccepted)
 			json.NewEncoder(w).Encode(data)
 			break
 		}
+	}
+}
+
+func AddPostById(w http.ResponseWriter, r *http.Request) {
+	if HandlePostError(w, r) {
+		return
 	}
 }
