@@ -1,6 +1,10 @@
 package main
 
-import "net/http"
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+)
 
 func HandleGetError(w http.ResponseWriter, r *http.Request) bool {
 	if r.Method != http.MethodGet {
@@ -17,4 +21,22 @@ func HandlePostError(w http.ResponseWriter, r *http.Request) bool {
 	} else {
 		return false
 	}
+}
+
+func HandleStringConvError(err error) bool {
+	if err != nil {
+		log.Fatal("Error in conversrion")
+		return true
+	} else {
+		return false
+	}
+}
+
+func HandleNotFoundError(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+	json.NewEncoder(w).Encode(map[string]string{
+		"error": "Not Found",
+	})
+
 }
