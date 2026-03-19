@@ -40,3 +40,21 @@ func HandleNotFoundError(w http.ResponseWriter, r *http.Request) {
 	})
 
 }
+
+func HandlePostPresent(id int, maptoCheck map[int]postData) bool {
+	_, ok := maptoCheck[id]
+	if !ok {
+		return false
+	} else {
+		return true
+	}
+}
+
+func HandleCommentPresent(id int, maptoCheck map[int][]Comment) bool {
+	_, ok := maptoCheck[id]
+	if !ok {
+		return false
+	} else {
+		return true
+	}
+}
