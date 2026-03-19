@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -82,7 +81,6 @@ func addCommentById(w http.ResponseWriter, r *http.Request, splitstring []string
 	status := HandlePostPresent(idval, Addpost)
 	if status {
 		json.NewDecoder(r.Body).Decode(&comment)
-		fmt.Println("*************", comment.CommPost)
 		postid := len(AddComment)
 		AddComment[postid] = append(AddComment[postid], Comment{
 			Id:       idval,
@@ -106,18 +104,17 @@ func fetchCommentById(w http.ResponseWriter, r *http.Request, stringval []string
 	var fetchComment []Comment
 	if HandleCommentPresent(idval, AddComment) {
 
-		for i, j := range AddComment {
-
-			if j[i].Id == idval {
-				fmt.Println("*************", j[i].Id)
-				fmt.Println("*************", j[i].Postid)
-				fmt.Println("*************", j[i].CommPost)
-				fetchComment = append(fetchComment, Comment{
-					Id:       j[i].Id,
-					Postid:   j[i].Postid,
-					CommPost: j[i].CommPost,
-				})
+		for _, arrval := range AddComment {
+			for _, j := range arrval {
+				if j.Id == idval {
+					fetchComment = append(fetchComment, Comment{
+						Id:       j.Id,
+						Postid:   j.Postid,
+						CommPost: j.CommPost,
+					})
+				}
 			}
+
 		}
 		w.Header().Set("Content-Type", "aplication/json")
 		w.WriteHeader(http.StatusAccepted)
